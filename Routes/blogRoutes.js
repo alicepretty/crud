@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const {
 	getblogs,
+	getSingleBlog,
 	setblogs,
 	Updateblogs,
 	deleteblogs,
@@ -10,8 +11,7 @@ const {
 router.get('/', getblogs)
 	
 router.post('/', setblogs)
+router.get('/:id', getSingleBlog) 
 router.put('/:id', Updateblogs) 
-router.delete('/:id', deleteblogs) 
-
-
+router.delete('/:id', deleteblogs)
 module .exports = router
