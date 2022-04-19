@@ -1,16 +1,19 @@
 const express = require('express')
+const CommentValidator = require('../validation/commentvalidation')
+ const {validate} = require('express-validation')
 const router = express.Router();
 
  const {
-		createcomment,
+		getComment,
+		getSinglecomment,
+		setcomment,
 		updatecomment,
-		deleteComments,
+		deletecomment,
  } = require('../Controllers/commentsControllers');
- router.route('/').post(createcomment);
-  router.route('/:id').put(updatecomment);
-  router.route('/:id').delete(deleteComments);
-
-
-
+router.get('/',  getComment);
+router.get('/:id', getSinglecomment); 
+router.post('/', validate( CommentValidator.createOrupdatecomment) , setcomment);
+router.put('/:id', validate( CommentValidator.createOrupdatecomment) , updatecomment);
+router.delete('/:id', deletecomment);
 
  module.exports= router

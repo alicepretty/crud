@@ -1,8 +1,10 @@
-const { default: mongoose } = require('mongoose');
+// const { default: mongoose } = require('mongoose');
+// const { config }  = require('dotenv')
 
-const dbURI =
-	'mongodb+srv://sandra-k:umwarimu@prettycluster.jreax.mongodb.net/portofolio?retryWrites=true&w=majority';
-mongoose
-	.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-	.then((result) => console.log('connected to db'.blue))
-	.catch((err) => console.log(err));
+// config();
+// const dbURI = process.env.MONGO_URI
+// mongoose.connect(process.env.DB_CONNECTION).then(console.log('connected'));
+// mongoose
+// 	.connect(dbURI, { useNewUrlParser: true, })
+// 	.then((result) => console.log('connected to db'.blue))
+// 	.catch((err) => console.log(err));

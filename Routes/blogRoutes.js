@@ -1,4 +1,6 @@
 const express = require('express')
+const  BlogValidator = require('../validation/validator')
+
 const router = express.Router()
 const {
 	getblogs,
@@ -10,7 +12,7 @@ const {
 
 router.get('/', getblogs)
 	
-router.post('/', setblogs)
+router.post('/', BlogValidator.verifyCreate, setblogs);
 router.get('/:id', getSingleBlog) 
 router.put('/:id', Updateblogs) 
 router.delete('/:id', deleteblogs)

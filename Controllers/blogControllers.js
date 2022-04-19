@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
  const uploadimage = require('../middleware/photo')
+ const errorResponse = require('../utils/error')
 const Blog = require('../models/blogsmodel')
 // descr get a blogs
 // route api/getblogs
@@ -46,19 +47,13 @@ const getSingleBlog = asyncHandler(async (req, res) => {
 // access private
 
 const setblogs =asyncHandler( async(req , res) => {
-try {
-	    if (!req.body) {
-			res.status(400);
-			throw new Error('please fill all fields');
-		}
+
+	    // if (!req.body) {
+		// 	throw new Error(res.status(400), 'please fill all fields');
+		// }
 		const blogs = await Blog.create({
-			title: req.body.title,
-			Email: req.body.Email,
-			articleImageId : '',
+			...req.body,
 			articleImageUrl: '',
-			publishedby: req.body.publishedby,
-			content: req.body.content,
-			releasedate: req.body.releasedate,
 		});
 		const image = await uploadimage(req);
 		if (req.files) {
@@ -66,12 +61,8 @@ try {
 			blogs.save();
 		}
 
-		res.status(201).json({ message: 'Blog created successfully', blogs });
+		return res.status(201).json({ message: 'Blog created successfully', blogs });
 
-} catch (error) {
-	console.log(error);
-	
-}
 
 })
 // descr get a blogs
@@ -106,7 +97,7 @@ const deleteblogs = asyncHandler(async (req , res) => {
 	);
 	
 
-  res.status(200).json({ message: `Successfully deleted a blog` });
+  res.status(200).json({ message: `Successfully deleted a blog`, deletedBlog });
 })
 module.exports = {
 	getblogs,
