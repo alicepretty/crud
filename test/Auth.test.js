@@ -1,11 +1,11 @@
 import mocha from 'mocha';
-import { should, use, request } from 'chai';
+import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../server';
-import  Authmodel from '../models/authModel';
+import app from '../src/server.js';
+import Authmodel from '../src/models/authModel.js';
 
-should();
-use(chaiHttp);
+chai.expect();
+chai.use(chaiHttp);
 
 const signup = {
 	firstName: 'Ani',
@@ -15,7 +15,6 @@ const signup = {
 	confirmPassword: '12345',
 };
 const { it, describe, after } = mocha;
-import { expect } from 'chai';
 
 describe('Testing  signup endpoints', async () => {
 	after(async () => {
@@ -25,18 +24,24 @@ describe('Testing  signup endpoints', async () => {
 		});
 	});
 	it('it should register ,login and get logged user', async () => {
-		const res = await request(app)
+		const res = await chai
+			.request(app)
 			.post('/api/auth/register')
 			.send(signup);
 		expect(res.status).to.be.equal(201);
-		expect(res.body).to.have.property('message', 'User login successfully');
+		expect(res.body).to.have.property(
+			'message',
+			'User registered successfully',
+		);
 	});
 
 	it('it should login user.', async () => {
-		const res = await request(app)
+		const res = await chai
+			.request(app)
 			.post('/api/auth/register')
 			.send(signup);
-		const res1 = await request(app)
+		const res1 = await chai
+			.request(app)
 			.post('/api/auth/login')
 			.send({ email: signup.Email, password: signup.password });
 		expect(res1.status).to.be.equal(201);
@@ -46,15 +51,18 @@ describe('Testing  signup endpoints', async () => {
 		);
 	});
 	it('it should get logged user', async () => {
-		const res = await request(app)
+		const res = await chai
+			.request(app)
 			.post('/api/auth/register')
 			.send(signup);
-		const res1 = await request(app)
+		const res1 = await chai
+			.request(app)
 			.post('/api/auth/login')
 			.send({ email: signup.Email, password: signup.password });
 
 		const token = `Bearer ${res1.body.data}`;
-		const res2 = await request(app)
+		const res2 = await chai
+			.request(app)
 			.get('/api/auth/me')
 			.set('Authorization', token);
 		expect(res2.status).to.be.equal(200);

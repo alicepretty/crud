@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
-import Commentmodel from '../Models/commentsModel';
-import successResponse from '../utils/success';
+import Commentmodel from '../models/commentsModel.js';
+import successResponse from '../utils/success.js';
 
 const getComment = asyncHandler(async (req, res) => {
 	const comment = await Commentmodel.find();

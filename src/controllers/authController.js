@@ -1,11 +1,14 @@
 import asyncHandler from 'express-async-handler';
-import Authmodel from '../Models/authModel';
-import errorResponse from '../utils/error';
-import successResponse from '../utils/success';
-import { hashPassword, checkPassword } from '../middleware/hash';
-import { signToken, verifyToken } from '../middleware/token';
+import Authmodel from '../models/authModel.js';
+import errorResponse from '../utils/error.js';
+import successResponse from '../utils/success.js';
+import hash from '../middleware/hash.js';
+import { signToken, verifyToken }  from '../middleware/token.js';
 import { config } from 'dotenv';
 config();
+
+const { hashPassword, checkPassword } = hash;
+
 
 // descr register a user
 // route api/auth/register
@@ -24,7 +27,7 @@ const signup = async (req, res, next) => {
 		});
 
 		const token = signToken({ user });
-		return successResponse(res, 201, 'User login successfully', token);
+		return successResponse(res, 201, 'User registered successfully', token);
 	} catch (error) {
 		console.log(error);
 		return errorResponse(
@@ -47,7 +50,7 @@ const login = asyncHandler(async (req, res) => {
 		const { email, password } = req.body;
 		let foundUser = await Authmodel.findOne({ email });
 		if (!foundUser) {
-			return errorResponse(res, 400, 'Invalid email or password');
+			return errorResponse(res, 401, 'Invalid email or password');
 		}
 		let userPassword = checkPassword(password, foundUser.password);
 		if (!userPassword) {

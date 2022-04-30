@@ -1,0 +1,5 @@
+exclude_patterns:
+  - 'src/config'
+  - 'src/controllers'
+  - 'src/documentation'
+  - 'test'

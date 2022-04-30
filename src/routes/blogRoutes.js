@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import BlogValidation from '../validation/validator';
+import BlogValidation from '../validation/validator.js';
 
 const router = Router();
 const { verifyCreate } = BlogValidation;
@@ -9,7 +9,7 @@ import {
 	setblogs,
 	Updateblogs,
 	deleteblogs,
-} from '../Controllers/blogControllers';
+} from '../controllers/blogControllers.js';
 
 router.get('/', getblogs);
 
