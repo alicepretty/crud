@@ -1,0 +1,47 @@
+{
+	"name": "myapi",
+	"version": "1.0.0",
+	"description": "about crud api",
+	"main": "server.js",
+	"scripts": {
+		"test": " npm run build && cross-env NODE_ENV=test PORT=8080 DEBUD=true nyc mocha --timeout 10000000 dist/test/**.test.js --exit",
+		"build": "babel crud --out-dir dist",
+		"start": "npm run build && node dist/server.js",
+		"server": "npm run build && nodemon dist/server.js",
+		"coveralls": "nyc report --reporter=text-lcov | coveralls",
+		"coverage": "nyc npm run test",
+		"dev_coverage": "nyc npm run dev_test"
+	},
+	"author": "pretty",
+	"license": "ISC",
+	"dependencies": {
+		"@babel/node": "^7.16.8",
+		"bcrypt": "^5.0.1",
+		"body-parser": "^1.20.0",
+		"cloudinary": "^1.29.0",
+		"colors": "^1.4.0",
+		"cross-env": "^7.0.3",
+		"dotenv": "^16.0.0",
+		"express": "^4.17.3",
+		"express-async-handler": "^1.2.0",
+		"express-fileupload": "^1.3.1",
+		"express-validation": "^4.0.1",
+		"joi": "^17.6.0",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^6.2.10"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.17.6",
+		"@babel/core": "^7.17.9",
+		"@babel/preset-env": "^7.16.11",
+		"@babel/register": "^7.17.7",
+		"@types/chai-http": "^4.2.0",
+		"chai": "^4.3.6",
+		"chai-http": "^4.3.0",
+		"coveralls": "^3.1.1",
+		"jest": "^28.0.3",
+		"mocha": "^9.2.2",
+		"nodemon": "^2.0.15",
+		"nyc": "^15.1.0"
+	}
+}
