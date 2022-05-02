@@ -1,11 +1,13 @@
 import asyncHandler from 'express-async-handler';
-import Authmodel from '../Models/authModel';
-import errorResponse from '../utils/error';
-import successResponse from '../utils/success';
-import { hashPassword, checkPassword } from '../middleware/hash';
-import { signToken, verifyToken } from '../middleware/token';
+import Authmodel from '../models/authModel.js';
+import errorResponse from '../utils/error.js';
+import successResponse from '../utils/success.js';
+import encryption from '../middleware/hash.js';
 import { config } from 'dotenv';
 config();
+
+const { hashPassword, checkPassword, signToken, verifyToken } = encryption;
+
 
 // descr register a user
 // route api/auth/register
@@ -13,9 +15,6 @@ config();
 
 const signup = async (req, res, next) => {
 	try {
-		if (!req.body) {
-			return errorResponse(res, 400, 'please fill all fields');
-		}
 		const password = req.body.password;
 		const user = await Authmodel.create({
 			...req.body,
@@ -23,10 +22,9 @@ const signup = async (req, res, next) => {
 			confirmPassword: hashPassword(password),
 		});
 
-		const token = signToken({ user });
-		return successResponse(res, 201, 'User login successfully', token);
+		const token = await signToken({ user });
+		return successResponse(res, 201, 'User registered successfully', token);
 	} catch (error) {
-		console.log(error);
 		return errorResponse(
 			res,
 			500,
@@ -39,22 +37,19 @@ const signup = async (req, res, next) => {
 // @route api/auth/login
 // @access public
 
-const login = asyncHandler(async (req, res) => {
+const login = async (req, res) => {
 	try {
-		if (!req.body) {
-			return errorResponse(res, 400, 'please fill all fields');
-		}
-		const { email, password } = req.body;
-		let foundUser = await Authmodel.findOne({ email });
+		const { Email, password } = req.body;
+		let foundUser = await Authmodel.findOne({ Email });
 		if (!foundUser) {
 			return errorResponse(res, 400, 'Invalid email or password');
 		}
 		let userPassword = checkPassword(password, foundUser.password);
 		if (!userPassword) {
-			return errorResponse(res, 400, 'Invalid email or password');
+			return errorResponse(res, 409, 'Invalid email or password');
 		}
-		const { _id, Email } = foundUser;
-		const token = signToken({ _id, Email });
+		const { _id } = foundUser;
+		const token = await signToken({ _id, email:foundUser.Email });
 		res.header('Authorization', `Bearer ${token}`);
 		return successResponse(res, 201, 'User login successfully', token);
 	} catch (error) {
@@ -62,7 +57,7 @@ const login = asyncHandler(async (req, res) => {
 		res.status(500);
 		throw new Error(`Internal server error ${error.message}`);
 	}
-});
+};
 // @desc     Get current logged in user
 // @route    GET /api/auth/me
 // access    Private,
@@ -70,9 +65,9 @@ const login = asyncHandler(async (req, res) => {
 const logged = async (req, res, next) => {
 	try {
 		const token = req.headers.authorization.replace('Bearer ', '');
-		const newtoken = verifyToken(token, process.env.Secret);
-		const { _id, Email } = newtoken;
-		return successResponse(res, 200, 'User is logged in!', { _id, Email });
+		const newtoken = await verifyToken(token, process.env.Secret);
+		const { _id, email } = newtoken;
+		return successResponse(res, 200, 'User is logged in!', { _id, email });
 	} catch (err) {
 		console.log(err);
 		return errorResponse(

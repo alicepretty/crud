@@ -1,43 +1,42 @@
 name: CI
 on:
   push:
-    branches:
-      - '**'
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
   workflow_dispatch:
 
 jobs:
   build:
+
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        node-version: [14.x]
+        os: [ ubuntu-latest ]
+        node-version: [ 14.x ]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Uses Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Configure test reporter
-        uses: amancevice/setup-code-climate@v0
-        with:
-          cc_test_reporter_id: ${{ secrets.CC_TEST_REPORTER_ID }}
-      - run: cc-test-reporter before-build
-      - run: npm install
-      - run: npm build
-      - run: npm test
-      - run: cc-test-reporter after-build
-    env:
-      CI: true
-      DB_CONNECTION: ${{ secrets.DB_CONNECTION }}
-      api_key: ${{ secrets.api_key }}
-      api_secret: ${{ secrets.api_secret }}	
-      cloud_name: ${{ secrets.cloud_name }}
-      Secret: ${{ secrets.Secret }}
-      expire: ${{ secrets.expire }}
+    - name: Test & publish code coverage
+      uses: amancevice/setup-code-climate@v0
+      with:
+        cc_test_reporter_id: ${{ secrets.CC_TEST_REPORTER_ID }}
+    - run: cc-test-reporter before-build
+    - run: npm install
+    - run: npm run test
+      env:
+        CI: true
+        TEST_DB: ${{ secrets.TEST_DB }}
+        api_key: ${{ secrets.api_key }}
+        api_secret: ${{ secrets.api_secret }}	
+        cloud_name: ${{ secrets.cloud_name }}
+        Secret: ${{ secrets.Secret }}
+        expire: ${{ secrets.expire }}
+    - run: cc-test-reporter after-build

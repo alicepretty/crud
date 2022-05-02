@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { commentvalidations } from '../validation/commentvalidation';
+import { commentvalidations } from '../validation/commentvalidation.js';
 import { validate } from 'express-validation';
 const router = Router();
 const { createOrupdatecomment } = commentvalidations;
 import {
-	getComment,
+	getComments,
 	getSinglecomment,
 	setcomment,
 	updatecomment,
 	deletecomment,
-} from '../Controllers/commentsControllers';
-router.get('/', getComment);
+} from '../controllers/commentsControllers.js';
+router.get('/', getComments);
 router.get('/:id', getSinglecomment);
 router.post('/', validate(createOrupdatecomment), setcomment);
 router.put('/:id', validate(createOrupdatecomment), updatecomment);

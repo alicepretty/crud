@@ -1,30 +1,30 @@
 import asyncHandler from 'express-async-handler';
-import uploadimage from '../middleware/photo';
-import errorResponse from '../utils/error';
-import Blogmodel from '../Models/blogsmodel';
+import uploadimage from '../middleware/photo.js';
+import errorResponse from '../utils/error.js';
+import Blogmodel from '../models/blogsmodel.js';
 // descr get a blogs
 // route api/getblogs
 // access private
 
 const getblogs = asyncHandler(async (req, res) => {
-	const blogs = await Blogmodel.find();
-
-	if (blogs.length === 0) {
-		res.status(200).json({ message: 'They are no blogs yet!' });
+	try {
+		const blogs = await Blogmodel.find();
+	
+		if (blogs.length === 0) {
+			res.status(204).json({ message: 'They are no blogs yet!' });
+		}
+	
+		res.status(200).json({ message: 'All blogs fetched successfully', blogs});
+	} catch (error) {
+		return errorResponse(res, 500, `Error while fetching data ${error.message}`)
 	}
-
-	res.status(200).json(blogs);
 });
 
 const getSingleBlog = asyncHandler(async (req, res) => {
 	try {
 		const blogs = await Blogmodel.findOne({ _id: req.params.id });
 
-		if (!blogs) {
-			res.status(404).json({ message: 'No such blog found!' });
-		}
-
-		res.status(200).json(blogs);
+		res.status(200).json({ message: 'Blog fetched successfully', blogs});
 	} catch (error) {
 		if (error.kind == 'ObjectId') {
 			res.status(404).json({ message: 'No such blog found!' });
@@ -76,7 +76,9 @@ const Updateblogs = asyncHandler(async (req, res) => {
 		{ ...req.body },
 	);
 
-	res.status(201).json({ message: `Successfuly updated blog`, updatedBlog });
+	const updated = await Blogmodel.findOne({ _id: req.params.id });
+
+	res.status(201).json({ message: `Successfuly updated blog`, updated });
 });
 // descr get a blogs
 // route api/getblogs
@@ -94,8 +96,7 @@ const deleteblogs = asyncHandler(async (req, res) => {
 	});
 
 	res.status(200).json({
-		message: `Successfully deleted a blog`,
-		deletedBlog,
+		message: `Successfully deleted a blog`
 	});
 });
 export { getblogs, setblogs, Updateblogs, getSingleBlog, deleteblogs };

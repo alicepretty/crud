@@ -1,11 +1,11 @@
 import asyncHandler from 'express-async-handler';
-import Commentmodel from '../Models/commentsModel';
-import successResponse from '../utils/success';
+import Commentmodel from '../models/commentsModel.js';
+import successResponse from '../utils/success.js';
 
-const getComment = asyncHandler(async (req, res) => {
+const getComments = async (req, res) => {
 	const comment = await Commentmodel.find();
 	try {
-		if (comment.length === 0) {
+		if (!comment) {
 			res.status(200).json({ message: 'They are no comment yet!' });
 		}
 
@@ -18,7 +18,7 @@ const getComment = asyncHandler(async (req, res) => {
 	} catch (error) {
 		console.log(error);
 	}
-});
+};
 
 //   @descr  getSinglecomment
 // route api/comments
@@ -135,7 +135,7 @@ const deletecomment = asyncHandler(async (req, res) => {
 });
 
 export {
-	getComment,
+	getComments,
 	getSinglecomment,
 	setcomment,
 	updatecomment,

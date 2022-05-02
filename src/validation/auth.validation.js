@@ -1,20 +1,25 @@
 // import { object, string } from 'joi'
 import Joi from 'joi';
 
-const signupvalidate = Joi.object({
-	firstName: Joi.string().required(),
-	lastName: Joi.string().required(),
+const schema = {
+signupvalidate: 
+	Joi.object().keys({
+		firstName: Joi.string().required(),
+		lastName: Joi.string().required(),
+		Email: Joi.string().required().email(),
+		password: Joi.string().required(),
+		confirmPassword: Joi.string().required(),
+}),
+loginValidate: Joi.object().keys({
 	Email: Joi.string().required().email(),
 	password: Joi.string().required(),
-	confirmPassword: Joi.string().required(),
-});
-const loginValidate = Joi.object({
-	Email: Joi.string().required().email(),
-	password: Joi.string().required(),
-});
+}),
+};
+
+const { signupvalidate, loginValidate } = schema;
 
 class AuthValidation {
-	static verifySignup = (req, res) => {
+	static verifySignup = async(req, res, next) => {
 		const { error } = signupvalidate.validate(req.body);
 		if (error) {
 			throw new Error(
@@ -23,8 +28,9 @@ class AuthValidation {
 				}),
 			);
 		}
+		return next();
 	};
-	static verifyLogin = (req, res) => {
+	static verifyLogin = async(req, res, next) => {
 		const { error } = loginValidate.validate(req.body);
 		if (error) {
 			throw new Error(
@@ -33,6 +39,8 @@ class AuthValidation {
 				}),
 			);
 		}
+		return next();
 	};
+	
 }
 export default AuthValidation;

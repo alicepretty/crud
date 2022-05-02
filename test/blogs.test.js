@@ -1,10 +1,10 @@
 import mocha from 'mocha';
-import { should, use, request } from 'chai';
+import chai, { expect, use } from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../server';
-import Blogmodel from '../models/blogsmodel';
+import app from '../src/index.js';
+import Blogmodel from '../src/models/blogsmodel.js';
 
-should();
+expect();
 use(chaiHttp);
 
 const blog = {
@@ -15,8 +15,6 @@ const blog = {
 };
 
 const { it, describe, after } = mocha;
-import { expect } from 'chai';
-// const { after } = require('mocha');
 
 describe('Testing blog endpoints', () => {
 	after(async () => {
@@ -26,20 +24,24 @@ describe('Testing blog endpoints', () => {
 		});
 	});
 	it('it should get all the blogs', async () => {
-		const res = await request(app).get('/api/blogs');
+		const dummy = await chai.request(app).post('/api/blogs').send(blog);
+		const res = await chai.request(app).get('/api/blogs');
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
-		expect(res.body).to.have.property('message', 'They are no blogs yet!');
+		expect(res.body).to.have.property(
+			'message',
+			'All blogs fetched successfully',
+		);
 	});
 	it('get single blog by id', async () => {
-		const dummy = await request(app).post('/api/blogs').send(blog);
+		const dummy = await chai.request(app).post('/api/blogs').send(blog);
 		const id = dummy.body.blogs._id;
-		const res = await request(app).get(`/api/blogs/${id}`);
+		const res = await chai.request(app).get(`/api/blogs/${id}`);
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
 	});
 	it('create a blog', async () => {
-		const res = await request(app).post('/api/blogs').send(blog);
+		const res = await chai.request(app).post('/api/blogs').send(blog);
 		expect(res.status).to.be.equal(201);
 		expect(res.body).to.be.a('object');
 		expect(res.body).to.have.property(
@@ -48,9 +50,10 @@ describe('Testing blog endpoints', () => {
 		);
 	});
 	it('update blog', async () => {
-		const dummy = await request(app).post('/api/blogs').send(blog);
+		const dummy = await chai.request(app).post('/api/blogs').send(blog);
 		const id = dummy.body.blogs._id;
-		const res = await request(app)
+		const res = await chai
+			.request(app)
 			.put(`/api/blogs/${id}`)
 			.send({ title: 'New title' });
 		expect(res.status).to.be.equal(201);
@@ -62,9 +65,9 @@ describe('Testing blog endpoints', () => {
 	});
 
 	it('delete blog', async () => {
-		const dummy = await request(app).post('/api/blogs').send(blog);
+		const dummy = await chai.request(app).post('/api/blogs').send(blog);
 		const id = dummy.body.blogs._id;
-		const res = await request(app).delete(`/api/blogs/${id}`);
+		const res = await chai.request(app).delete(`/api/blogs/${id}`);
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
 		expect(res.body).to.have.property(

@@ -1,7 +1,6 @@
-import { Schema as _Schema, model } from 'mongoose';
-const Schema = _Schema;
+import mongoose from 'mongoose';
 
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
 	{
 		firstName: {
 			type: String,
@@ -28,5 +27,4 @@ const userSchema = new Schema(
 	{ timestamps: true },
 );
 
-const Auth = model('Auth', userSchema);
-export default Auth;
+export default mongoose.model('Auth',userSchema);
