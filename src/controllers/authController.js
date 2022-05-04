@@ -66,6 +66,7 @@ const logged = async (req, res, next) => {
 	try {
 		const token = req.headers.authorization.replace('Bearer ', '');
 		const newtoken = await verifyToken(token, process.env.Secret);
+		// console.log(token);
 		const { _id, email } = newtoken;
 		return successResponse(res, 200, 'User is logged in!', { _id, email });
 	} catch (err) {
