@@ -5,10 +5,13 @@
 	"main": "src/index.js",
 	"scripts": {
 		"build": "babel src --out-dir dist",
-		"server": "node --exec src/index.js",
+		"server": "nodemon --exec src/index.js",
 		"preinstall": "rm -rf /dist",
-		"start": "npm run preinstall && npm run build && nodemon dist/index.js",
+		"start": "npm run preinstall && npm run build && node dist/index.js",
 		"test": " cross-env NODE_ENV=test c8 --reporter=text --reporter=lcov ./node_modules/.bin/mocha --timeout 100000 --exit --require @babel/register"
+	},
+	"engines": {
+		"node": "16.14.2"
 	},
 	"author": "Alice MUHARAKEYE",
 	"license": "ISC",
