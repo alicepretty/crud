@@ -58,7 +58,7 @@ describe('Testing  signup endpoints', async () => {
 		const res1 = await chai
 			.request(app)
 			.post('/api/auth/login')
-			.send({ email: signup.Email, password: signup.password });
+			.send({ Email: signup.Email, password: signup.password });
 
 		const token = `Bearer ${res1.body.data}`;
 		const res2 = await chai
