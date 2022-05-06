@@ -113,7 +113,7 @@ const options = {
 							'Error getting user! Please provide sign in or check the provided credentials!',
 					},
 				},
-		},
+			},
 		},
 		'/api/blogs': {
 			get: {
@@ -204,30 +204,30 @@ const options = {
 							schema: {
 								type: 'object',
 
-				properties: {
-					title: {
-						type: 'string',
-						description: 'Blog title',
-					},
-					Email: {
-						type: 'string',
-						description: "Blog publisher's email",
-					},
-					content: {
-						type: 'string',
-						description: 'Blog content',
-					},
-					imageUrl: {
-						type: 'string',
-						description: 'Blolg image url',
-						format: 'binary'
-					},
-					publishedby: {
-						type: 'string',
-						description: 'Blog publisher names ',
-					}
+								properties: {
+									title: {
+										type: 'string',
+										description: 'Blog title',
+									},
+									Email: {
+										type: 'string',
+										description: "Blog publisher's email",
+									},
+									content: {
+										type: 'string',
+										description: 'Blog content',
+									},
+									imageUrl: {
+										type: 'string',
+										description: 'Blolg image url',
+										format: 'binary',
+									},
+									publishedby: {
+										type: 'string',
+										description: 'Blog publisher names ',
+									},
+								},
 							},
-						},
 						},
 					},
 				},
@@ -437,7 +437,7 @@ const options = {
 					imageUrl: {
 						type: 'string',
 						description: 'Blolg image url',
-						format: 'binary'
+						format: 'binary',
 					},
 					publishedby: {
 						type: 'string',
