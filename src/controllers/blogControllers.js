@@ -22,7 +22,7 @@ const getblogs = asyncHandler(async (req, res) => {
 
 const getSingleBlog = asyncHandler(async (req, res) => {
 	try {
-		const blogs = await Blogmodel.findOne({ _id: req.params.id });
+		const blogs = await Blogmodel.findOne({ _id: req.params.blogId });
 
 		res.status(200).json({ message: 'Blog fetched successfully', blogs});
 	} catch (error) {

@@ -15,7 +15,7 @@ import {
 router.get('/', getblogs);
 
 router.post('/', verifyCreate, setblogs);
-router.get('/:id', getSingleBlog);
+router.get('/:blogId', getSingleBlog);
 router.put('/:id', Updateblogs);
 router.delete('/:id', deleteblogs);
 export default router;

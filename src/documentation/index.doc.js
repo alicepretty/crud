@@ -162,14 +162,14 @@ const options = {
 				},
 			},
 		},
-		'/api/blogs/{id}': {
+		'/api/blogs/{blogId}': {
 			get: {
 				tags: ['Blog'],
 				description: 'Retrieve single blog articles',
 				security: [],
 				parameters: [
 					{
-						name: 'id',
+						name: 'blogId',
 						in: 'path',
 						required: true,
 					},
@@ -265,7 +265,7 @@ const options = {
 				},
 			},
 		},
-		'/api/blog/comments': {
+		'/api/blogs/comments': {
 			get: {
 				tags: ['Comment'],
 				description: 'Getting all comments',
@@ -310,7 +310,7 @@ const options = {
 				},
 			},
 		},
-		'/api/blog/comments/{id}': {
+		'/api/blogs/{blogId}/comments/': {
 			get: {
 				tags: ['Comment'],
 				description: 'Getting single comment by id',
