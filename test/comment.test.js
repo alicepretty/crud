@@ -2,26 +2,47 @@ import mocha from 'mocha';
 import chai, { expect, use } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/index.js';
-import Commentmodel from '../src/models/commentsModel.js';
+import {Blog, Comment} from '../src/models/blogsmodel.js';
 
 expect();
 use(chaiHttp);
 
-const comment = {
-	Name: 'ptr',
-	Email: 'test@gmail.com',
-	Message: 'anith adk ldksdmc',
+const blog = {
+title:
+"BICT",
+Email:
+"test@gmail.com",
+publishedby:
+"Pretty",
+content:
+"Lorem ipsum dolor emet bla bla bla bla"
 };
 
-const { it, describe, after } = mocha;
+
+const { it, describe, after,before } = mocha;
+
 
 describe('Testing comment endpoints', () => {
+	before(async () => {
+		await Blog.deleteMany({
+			where: {},
+			truncate: true,
+		});
+	});
 	it('it should get all the comments', async () => {
+		const Blog = await chai.request(app).post('/api/blogs').send(blog);
 		const dummy = await chai
 			.request(app)
-			.post('/api/blog/comments')
-			.send(comment);
-		const res = await chai.request(app).get('/api/blog/comments');
+			.post(`/api/blog/${Blog.body.blogs._id}/comments`)
+			.send({
+				Name: 'ptr',
+				Email: 'test@gmail.com',
+				Message: 'anith adk ldksdmc',
+			});
+		const res = await chai
+			.request(app)
+			.get(`/api/blog/${Blog.body.blogs._id}/comments`);
+		// console.log(res);
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
 		expect(res.body).to.have.property(
@@ -30,12 +51,16 @@ describe('Testing comment endpoints', () => {
 		);
 	});
 	it('get single comment by id', async () => {
+		const Blog = await chai.request(app).post('/api/blogs').send(blog);
 		const dummy = await chai
 			.request(app)
-			.post('/api/blog/comments')
-			.send(comment);
-		const id = dummy.body.data._id;
-		const res = await chai.request(app).get(`/api/blog/comments/${id}`);
+			.post(`/api/blog/${Blog.body.blogs._id}/comments`)
+			.send({
+			Name: 'ptr',
+			Email: 'test@gmail.com',
+			Message: 'anith adk ldksdmc',
+		});
+		const res = await chai.request(app).get(`/api/blog/${Blog.body.blogs._id}/${dummy.body.data.Comment[0]._id}`);
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
 		expect(res.body).to.have.property(
@@ -44,7 +69,13 @@ describe('Testing comment endpoints', () => {
 		);
 	});
 	it('create a comment', async () => {
-		const res = await chai.request(app).post('/api/blog/comments').send(comment);
+	const dummyBlog = await chai.request(app).post('/api/blogs').send(blog);
+	const comment = {
+		Name: 'ptr',
+		Email: 'test@gmail.com',
+		Message: 'anith adk ldksdmc',
+	};
+		const res = await chai.request(app).post(`/api/blog/${dummyBlog.body.blogs._id}/comments`).send(comment);
 		expect(res.status).to.be.equal(201);
 		expect(res.body).to.be.a('object');
 		expect(res.body).to.have.property(
@@ -52,31 +83,19 @@ describe('Testing comment endpoints', () => {
 			'Successfully created comment',
 		);
 	});
-	it('update comment', async () => {
-		const dummy = await chai
-			.request(app)
-			.post('/api/blog/comments')
-			.send(comment);
-		const id = dummy.body.data._id;
-		const res = await chai
-			.request(app)
-			.put(`/api/blog/comments/${id}`)
-			.send({ Name: 'New Name' });
-		expect(res.status).to.be.equal(200);
-		expect(res.body).to.be.a('object');
-		expect(res.body).to.have.property(
-			'message',
-			'Successfully updated comment',
-		);
-	});
 
 	it('delete comment', async () => {
+		const dummyBlog = await chai.request(app).post('/api/blogs').send(blog);
 		const dummy = await chai
 			.request(app)
-			.post('/api/blog/comments')
-			.send(comment);
-		const id = dummy.body.data._id;
-		const res = await chai.request(app).delete(`/api/blog/comments/${id}`);
+			.post(`/api/blog/${dummyBlog.body.blogs._id}/comments`)
+			.send({
+				Name: 'ptr',
+				Email: 'test@gmail.com',
+				Message: 'anith adk ldksdmc',
+			});
+		const id = dummy.body.data.Comment[0]._id;
+		const res = await chai.request(app).delete(`/api/blog/${dummyBlog.body.blogs._id}/${id}`);
 		expect(res.status).to.be.equal(200);
 		expect(res.body).to.be.a('object');
 		expect(res.body).to.have.property(
@@ -85,7 +104,7 @@ describe('Testing comment endpoints', () => {
 		);
 	});
 	after(async () => {
-		await Commentmodel.deleteMany({
+		await Comment.deleteMany({
 			where: {},
 			truncate: true,
 		});

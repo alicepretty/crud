@@ -1,14 +1,14 @@
 import asyncHandler from 'express-async-handler';
 import uploadimage from '../middleware/photo.js';
 import errorResponse from '../utils/error.js';
-import Blogmodel from '../models/blogsmodel.js';
+import {Blog} from '../models/blogsmodel.js';
 // descr get a blogs
 // route api/getblogs
 // access private
 
 const getblogs = asyncHandler(async (req, res) => {
 	try {
-		const blogs = await Blogmodel.find();
+		const blogs = await Blog.find();
 	
 		if (blogs.length === 0) {
 			res.status(204).json({ message: 'They are no blogs yet!' });
@@ -22,7 +22,7 @@ const getblogs = asyncHandler(async (req, res) => {
 
 const getSingleBlog = asyncHandler(async (req, res) => {
 	try {
-		const blogs = await Blogmodel.findOne({ _id: req.params.blogId });
+		const blogs = await Blog.findOne({ _id: req.params.blogId });
 
 		res.status(200).json({ message: 'Blog fetched successfully', blogs});
 	} catch (error) {
@@ -46,7 +46,7 @@ const setblogs = asyncHandler(async (req, res) => {
 	// if (!req.body) {
 	// 	throw new Error(res.status(400), 'please fill all fields');
 	// }
-	const blogs = await Blogmodel.create({
+	const blogs = await Blog.create({
 		...req.body,
 		articleImageUrl: '',
 	});
@@ -65,18 +65,18 @@ const setblogs = asyncHandler(async (req, res) => {
 // access private
 
 const Updateblogs = asyncHandler(async (req, res) => {
-	let blog = await Blogmodel.findOne({ _id: req.params.id });
+	let blog = await Blog.findOne({ _id: req.params.blogId });
 
 	if (!blog) {
 		res.status(404).json({ message: 'No blog found with such id' });
 	}
 
-	const updatedBlog = await Blogmodel.findOneAndUpdate(
-		{ id: req.params.id },
+	const updatedBlog = await Blog.findOneAndUpdate(
+		{ id: req.params.blogId },
 		{ ...req.body },
 	);
 
-	const updated = await Blogmodel.findOne({ _id: req.params.id });
+	const updated = await Blog.findOne({ _id: req.params.blogId });
 
 	res.status(201).json({ message: `Successfuly updated blog`, updated });
 });
@@ -85,14 +85,14 @@ const Updateblogs = asyncHandler(async (req, res) => {
 // access private
 
 const deleteblogs = asyncHandler(async (req, res) => {
-	let blog = await Blogmodel.findOne({ _id: req.params.id });
+	let blog = await Blog.findOne({ _id: req.params.blogId });
 
 	if (!blog) {
 		res.status(404).json({ message: 'No blog found with such id' });
 	}
 
-	const deletedBlog = await Blogmodel.findOneAndDelete({
-		_id: req.params.id,
+	const deletedBlog = await Blog.findOneAndDelete({
+		_id: req.params.blogId,
 	});
 
 	res.status(200).json({

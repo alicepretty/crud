@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import BlogValidation from '../validation/validator.js';
+import {isAdmin} from '../middleware/admin.js';
 
 const router = Router();
 const { verifyCreate } = BlogValidation;
@@ -14,8 +15,8 @@ import {
 
 router.get('/', getblogs);
 
-router.post('/', verifyCreate, setblogs);
+router.post('/',verifyCreate, setblogs);
 router.get('/:blogId', getSingleBlog);
-router.put('/:id', Updateblogs);
-router.delete('/:id', deleteblogs);
+router.put('/:blogId', Updateblogs);
+router.delete('/:blogId', deleteblogs);
 export default router;

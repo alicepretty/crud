@@ -2,7 +2,7 @@ import mocha from 'mocha';
 import chai, { expect, use } from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../src/index.js';
-import Blogmodel from '../src/models/blogsmodel.js';
+import {Blog} from '../src/models/blogsmodel.js';
 
 expect();
 use(chaiHttp);
@@ -18,7 +18,7 @@ const { it, describe, after } = mocha;
 
 describe('Testing blog endpoints', () => {
 	after(async () => {
-		await Blogmodel.deleteMany({
+		await Blog.deleteMany({
 			where: {},
 			truncate: true,
 		});

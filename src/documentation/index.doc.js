@@ -29,6 +29,7 @@ const options = {
 		'/api/auth/register': {
 			post: {
 				tags: ['Auth'],
+				summary: 'Register User',
 				description: 'User registration',
 				security: [],
 				parameters: [],
@@ -65,6 +66,7 @@ const options = {
 		'/api/auth/login': {
 			post: {
 				tags: ['Auth'],
+				summary: 'Login Admin',
 				description: 'User login',
 				security: [],
 				parameters: [],
@@ -101,6 +103,7 @@ const options = {
 		'/api/auth/me': {
 			get: {
 				tags: ['Auth'],
+				summary: 'User logged in',
 				description: 'Get logged user',
 				parameters: [],
 				requestBody: [],
@@ -118,6 +121,7 @@ const options = {
 		'/api/blogs': {
 			get: {
 				tags: ['Blog'],
+				summary: 'Get all posted blogs',
 				description: 'Retrieve all blog articles',
 				security: [],
 				parameters: [],
@@ -136,6 +140,7 @@ const options = {
 			},
 			post: {
 				tags: ['Blog'],
+				summary: 'create a blog post',
 				description: 'Create blog',
 				security: [],
 				parameters: [],
@@ -165,6 +170,7 @@ const options = {
 		'/api/blogs/{blogId}': {
 			get: {
 				tags: ['Blog'],
+				summary: 'Get a blog post by Id',
 				description: 'Retrieve single blog articles',
 				security: [],
 				parameters: [
@@ -189,11 +195,12 @@ const options = {
 			},
 			put: {
 				tags: ['Blog'],
+				summary: 'modify a blog post',
 				description: 'Update blog',
 				security: [],
 				parameters: [
 					{
-						name: 'id',
+						name: 'blogId',
 						in: 'path',
 						required: true,
 					},
@@ -245,12 +252,13 @@ const options = {
 			},
 			delete: {
 				tags: ['Blog'],
+				summary: 'delete a blog',
 				description: 'Delete blog',
 				security: [],
 				parameters: [
 					{
 						in: 'path',
-						name: 'id',
+						name: 'blogId',
 						required: true,
 					},
 				],
@@ -265,12 +273,19 @@ const options = {
 				},
 			},
 		},
-		'/api/blogs/comments': {
+		'/api/blog/{blogId}/comments': {
 			get: {
 				tags: ['Comment'],
+				summary: 'get comments of a blog',
 				description: 'Getting all comments',
 				security: [],
-				parameters: [],
+				parameters: [
+					{
+						name: 'blogId',
+						in: 'path',
+						required: true,
+					},
+				],
 				responses: {
 					200: {
 						description: 'successfully',
@@ -282,9 +297,16 @@ const options = {
 			},
 			post: {
 				tags: ['Comment'],
+				summary: 'create comments of a blog',
 				security: [],
 				description: 'Creating comment',
-				parameters: [],
+				parameters: [
+					{
+						name: 'blogId',
+						in: 'path',
+						required: true,
+					},
+				],
 				requestBody: {
 					content: {
 						'application/json': {
@@ -310,7 +332,7 @@ const options = {
 				},
 			},
 		},
-		'/api/blogs/{blogId}/comments/': {
+		'/api/blog/{blogId}/{commentId}': {
 			get: {
 				tags: ['Comment'],
 				description: 'Getting single comment by id',
@@ -318,39 +340,15 @@ const options = {
 				parameters: [
 					{
 						in: 'path',
-						name: 'id',
+						name: 'blogId',
 						required: true,
 					},
-				],
-				responses: {
-					200: {
-						description: 'successfully',
-					},
-					500: {
-						description: 'Internal Server Error',
-					},
-				},
-			},
-			put: {
-				tags: ['Comment'],
-				description: 'Update comment by id',
-				security: [],
-				parameters: [
 					{
 						in: 'path',
-						name: 'id',
+						name: 'commentId',
 						required: true,
 					},
 				],
-				requestBody: {
-					content: {
-						'application/json': {
-							schema: {
-								$ref: '#/components/schemas/Comment',
-							},
-						},
-					},
-				},
 				responses: {
 					200: {
 						description: 'successfully',
@@ -367,7 +365,12 @@ const options = {
 				parameters: [
 					{
 						in: 'path',
-						name: 'id',
+						name: 'blogId',
+						required: true,
+					},
+					{
+						in: 'path',
+						name: 'commentId',
 						required: true,
 					},
 				],
@@ -454,7 +457,7 @@ const options = {
 				type: 'object',
 
 				properties: {
-					id: {
+					blogId: {
 						type: 'string',
 						description: 'The auto-generated id of the message',
 					},

@@ -8,7 +8,6 @@ config();
 
 const { hashPassword, checkPassword, signToken, verifyToken } = encryption;
 
-
 // descr register a user
 // route api/auth/register
 // access public
@@ -16,12 +15,13 @@ const { hashPassword, checkPassword, signToken, verifyToken } = encryption;
 const signup = async (req, res, next) => {
 	try {
 		const password = req.body.password;
+	
 		const user = await Authmodel.create({
 			...req.body,
 			password: hashPassword(password),
 			confirmPassword: hashPassword(password),
 		});
-
+		 
 		const token = await signToken({ user });
 		return successResponse(res, 201, 'User registered successfully', token);
 	} catch (error) {
@@ -49,7 +49,7 @@ const login = async (req, res) => {
 			return errorResponse(res, 409, 'Invalid email or password');
 		}
 		const { _id } = foundUser;
-		const token = await signToken({ _id, email:foundUser.Email });
+		const token = await signToken({ _id, email: foundUser.Email });
 		res.header('Authorization', `Bearer ${token}`);
 		return successResponse(res, 201, 'User login successfully', token);
 	} catch (error) {
